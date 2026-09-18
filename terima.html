@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Diri Diterima</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .icon-success {
+            width: 64px;
+            height: 64px;
+            background: #d1fae5;
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .data-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .value {
+            font-size: 16px;
+            color: var(--text-main);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="icon-success">✓</div>
+            <h1>Data Berhasil Diterima!</h1>
+            <p class="subtitle">Berikut adalah ringkasan informasi yang Anda masukkan</p>
+        </div>
+
+        <div class="data-grid">
+            <div class="data-item">
+                <div class="label">Nama Lengkap</div>
+                <div class="value" id="res-nama">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Nama Panggilan</div>
+                <div class="value" id="res-namax">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Nomor Registrasi Mahasiswa (NRP)</div>
+                <div class="value" id="res-nrp">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Kata Kunci (Password)</div>
+                <div class="value" id="res-pwd" style="font-family: monospace; letter-spacing: 2px;">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Alamat Email</div>
+                <div class="value" id="res-surel">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Tanggal Lahir</div>
+                <div class="value" id="res-ultah">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Nomor HP</div>
+                <div class="value" id="res-telp">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Jenis Kelamin</div>
+                <div class="value" id="res-gender">-</div>
+            </div>
+
+            <div class="data-item">
+                <div class="label">Kemampuan / Keahlian</div>
+                <div class="badge-container" id="res-pakar">
+                    <!-- Badge keahlian akan muncul di sini -->
+                </div>
+            </div>
+        </div>
+
+        <a href="index.html" class="btn">Kembali ke Form</a>
+    </div>
+
+    <script>
+        // Mengambil data dari URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Helper untuk memasukkan teks dengan aman (mencegah XSS)
+        function setText(id, paramName, fallback = "Tidak diisi") {
+            const val = urlParams.get(paramName);
+            document.getElementById(id).textContent = val ? decodeURIComponent(val) : fallback;
+        }
+
+        // Mapping data teks dasar
+        setText('res-nama', 'nama');
+        setText('res-namax', 'namax');
+        setText('res-nrp', 'nrp');
+        setText('res-surel', 'surel');
+        setText('res-telp', 'nohp'); // Sesuai name="nohp" di form Anda
+        
+        // Sensor password agar tetap aman dipandang
+        const pwd = urlParams.get('pwd');
+        document.getElementById('res-pwd').textContent = pwd ? "•".repeat(pwd.length) : "Tidak diisi";
+
+        // Format tanggal lahir agar lebih rapi (jika diisi)
+        const ultah = urlParams.get('ultah');
+        if (ultah) {
+            const opsi = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('res-ultah').textContent = new Date(ultah).toLocaleDateString('id-ID', opsi);
+        }
+
+        // Konversi kode Gender menjadi teks yang ramah pengguna
+        const genderCode = urlParams.get('gender');
+        let genderText = "Terserah";
+        if (genderCode === 'L') genderText = "Cowok ♂";
+        if (genderCode === 'P') genderText = "Cewek ♀";
+        document.getElementById('res-gender').textContent = genderText;
+
+        // Mengambil semua checkbox kemampuan (pakar)
+        const pakarCodes = urlParams.getAll('pakar');
+        const pakarContainer = document.getElementById('res-pakar');
+
+        const pakarMapping = {
+            'PS': 'Bisa Photoshop 🎨',
+            'AI': 'Mahir AI Adobe 🤖'
+        };
+
+        if (pakarCodes.length > 0) {
+            pakarCodes.forEach(code => {
+                if (pakarMapping[code]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge';
+                    badge.textContent = pakarMapping[code];
+                    pakarContainer.appendChild(badge);
+                }
+            });
+        } else {
+            pakarContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 16px;">Tidak ada keahlian terpilih</span>';
+        }
+    </script>
+</body>
+</html>
